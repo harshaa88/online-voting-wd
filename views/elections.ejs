@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title><%= title %></title>
+    <style>
+        .button {
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    background-color: #538fbe;
+    padding: 1rem;
+    font-size: 24px;
+    border: 1px solid #2d6898;
+}
+.button:hover{
+    background-color: black;
+}
+    </style>
+    <script>
+        function deleteElection(id) {
+        fetch(`/elections/${id}`, {
+            method: "delete",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({
+                "_csrf":token
+            })
+        }).then((res)=>{
+            if (res.ok) {
+                window.location.reload();
+            }
+        }).catch((err)=> console.error(err))
+    }
+    </script>
+  
+</head>
+
+<body >
+
+    <%- include('header.ejs') %>
+    <div>
+        <h3 style="font-family: arial, cursive;font-size: 2rem;color: rgb(80, 127, 255);">Welcome <%= userName %> !</h3>
+        <div>
+            <% if (messages.success) { %>
+                <p ><%= messages.success %></p>
+            <% } %>
+        </div>
+
+
+        <div >
+
+            <div >
+                <a class="button" href="/elections/create" >+ Create a New Election</a>
+            </div>
+        </div>
+    
+        <div >
+ 
+            <div >  
+                <p ><%= (elections.length==0)?"Create atleast one election ! ":"" %></p>
+                <ol >
+                    <% for (let i=0; i<elections.length; i++) { %>
+                        <li style="background-color: rgb(127, 223, 255);margin-top: 1rem;text-align: center;padding: 1rem;">
+                            <div >
+                                <a style="text-decoration: none;color: blue;" href="/elections/<%= elections[i].id %>"><%= elections[i].election_name %></a>
+                            </div>
+                        </li>
+                    <% } %>
+                </ol>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

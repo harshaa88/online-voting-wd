@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet"  href="style.css"> -->
+    <title><%= title %></title>
+    <style>
+         @import url('https://fonts.googleapis.com/css2?family=Rowdies&display=swap'); 
+ @import url('https://fonts.googleapis.com/css2?family=PT+Sans&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');  
+
+body{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    background-color: black;
+    
+    font-family: 'PT Sans', sans-serif;
+}
+
+@keyframes bg-change {
+    0% { background-color: black; }
+    50% { background-color: grey; }
+    100% {  background-color: rgb(210, 207, 207);}
+}
+
+.header{
+    margin-top: 2rem;
+    border: 3px solid white;
+    padding: 1rem;
+    background-color: rgb(105, 223, 255);
+    border-radius: 10px;
+    width:95vw;
+    text-align: center;
+    font-family: 'Rowdies', cursive;
+    font-size: 2rem;
+    
+}
+
+@keyframes back-change {
+    0% { background-color: yellow; }
+    50% { background-color: antiquewhite; }
+    100% {  background-color: rgb(250, 166, 208);}
+    
+}
+
+
+  
+  @keyframes color-change {
+    0% { color: green; }
+    50% { color: blue;; }
+    100% { color: brown; }
+  }
+
+
+
+.header a{
+    text-decoration: none;
+    color: rgb(67, 43, 226);
+    
+}
+.btn{
+    text-decoration: none;
+    color: white;
+    padding: 1rem;
+    border: 3px solid white;
+    border-radius: 9px;
+    font-family: 'PT Sans', sans-serif;
+    font-weight: bolder;
+}
+
+.mt{
+    margin-top: 4rem;
+}
+
+
+.pushable {
+    background: rgb(27, 0, 163);
+    border: none;
+    border-radius: 12px;
+    padding: 0;
+    cursor: pointer;
+  }
+  .front {
+    display: block;
+    padding: 12px 42px;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    background: rgb(0, 136, 240);
+    color: white;
+    transform: translateY(-4px);
+  }
+  
+  .pushable:focus:not(:focus-visible) {
+    outline: none;
+  }
+  form{
+    display: flex;
+    flex-direction: column;
+    font-size: 1.5em;
+  }
+  input{
+    padding: 1em;
+    border-radius: 1rem;
+    border:5px solid blue
+  }
+    </style>
+    
+</head>
+<body >
+    <%- include('header.ejs') %>
+  
+    <div style="border-radius: 9px;margin-left:70rem;margin-top: 1rem;padding: 1rem; border: 3px solid aqua;text-decoration: none;color: aqua;background-color: black;">
+        
+        <a style="text-decoration: none; color: white;font-weight: bold;" href="/elections" >Go back</a>
+        
+    </div>
+    <div class="flex text-gray-800 antialiased flex-col overflow-hidden bg-yellow-200 py-6 sm:py-12 w-full">
+        <div class=" py-3 sm:w-96">
+            <!-- <h1 class="font-light font-serif text-decoration-line: underline text-red-400">Create New election</h1> -->
+            <div>
+                <% if (messages && messages.error && messages.error.length > 0) { %>
+                    <% for(var i=0; i<messages.error.length; i++) { %>
+                        <p class="bg-white my-4 list-none rounded-md px-4 py-2 font-serif"><%= messages.error[i] %></p>
+                    <% } %>
+                <% } %>
+            </div>
+       
+            <div class="mt-4 rounded-lg text-left w-full">
+                <form action="/elections" method="post" class="px-10 py-5">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <u>
+                    <label for="electionName">Create New Election</label>
+                    </u>
+                    <label style="margin-top: 1rem;" for="electionName">What is your election's name?</label>
+                    <br>
+                    <input id="electionName" name="electionName" type="text" placeholder="Enter The Election name"  required>
+                    
+                
+                    <label style="margin-top: 1rem;" for="url" >Enter url for displaying election</label>
+                    <br>
+                    <input id="url" name="url" type="text" placeholder="Enter The URL"  required>
+                    <br>
+                    <button style="margin-top: 1rem;" class="btn pushable front" type="submit" id="roundButton" >Submit</button>
+                                  
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<!-- new election page -->
+<!-- new election page -->

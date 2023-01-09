@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <link rel="icon" type="image/x-icon" href="/img/vote.png">
+    <title><%= title %></title>
+    <style>
+         @import url('https://fonts.googleapis.com/css2?family=Rowdies&display=swap'); 
+ @import url('https://fonts.googleapis.com/css2?family=PT+Sans&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');  
+
+body{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    background-color: black;
+    
+    font-family: 'PT Sans', sans-serif;
+}
+
+@keyframes bg-change {
+    0% { background-color: black; }
+    50% { background-color: grey; }
+    100% {  background-color: rgb(210, 207, 207);}
+}
+
+.header{
+    margin-top: 2rem;
+    border: 3px solid white;
+    padding: 1rem;
+    background-color: rgb(105, 203, 255);
+    border-radius: 10px;
+    width:95vw;
+    text-align: center;
+    font-family: 'Rowdies', cursive;
+    font-size: 2rem;
+    
+}
+
+@keyframes back-change {
+    0% { background-color: yellow; }
+    50% { background-color: antiquewhite; }
+    100% {  background-color: rgb(250, 166, 208);}
+    
+}
+
+
+  
+  @keyframes color-change {
+    0% { color: green; }
+    50% { color: blue;; }
+    100% { color: brown; }
+  }
+
+
+
+.header a{
+    text-decoration: none;
+    color: rgb(43, 43, 226);
+}   
+.btn{
+    text-decoration: none;
+    color: white;
+    padding: 1rem;
+    border: 3px solid white;
+    border-radius: 9px;
+    font-family: 'PT Sans', sans-serif;
+    font-weight: bolder;
+}
+
+.mt{
+    margin-top: 4rem;
+}
+
+
+.pushable {
+    background: rgb(0, 3, 163);
+    border: none;
+    border-radius: 12px;
+    padding: 0;
+    cursor: pointer;
+  }
+  .front {
+    display: block;
+    padding: 12px 42px;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    background: rgb(56, 0, 240);
+    color: white;
+    transform: translateY(-4px);
+  }
+  
+  .pushable:focus:not(:focus-visible) {
+    outline: none;
+  }
+  form{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    color: black;
+    padding: 2rem;
+    border: 5px solid green;
+    border-radius: 1rem;
+  }
+  input,textarea{
+    border-radius: 1rem;
+    padding: 1rem;
+    border: 3px solid blue;
+  }
+  
+      </style>
+      <script>
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+        //function for deleting the question
+        function deleteQuestions({electionID, questionID}) {
+            fetch(`/elections/${electionID}/questions/${questionID}`, {
+                method: "delete",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({
+                    "_csrf":token
+                })
+            }).then((res1)=>{
+                if (res1.ok) {
+                    window.location.reload();
+                }
+            }).catch((err1)=> console.error(err1))
+        }
+    </script>
+</head>
+<body >
+    <%- include('header.ejs') %>
+
+    <div >
+        <% if (messages && messages.error && messages.error.length > 0) { %>
+            <% for(var i=0; i<messages.error.length; i++) { %>
+                <p ><%= messages.error[i] %></p>
+            <% } %>
+        <% } %>
+        </div>
+    <div >
+     
+        <a class="front pushable" style="text-decoration: none;" href="/elections" >Go To All Elections Page</a>
+        
+        <a class="front pushable" style="margin-top: 1rem; text-decoration: none;" href="/elections/<%= id %>/" >Go To Election Page</a>
+    </div>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <div>
+        <div >
+            <h1 ><%= title %> - Questions</h1>
+        </div>
+        
+        <div >
+            <div style="background-color: rgb(0, 110, 255);padding: 1rem;border-radius: 1rem;border: 5px solid rgb(125, 114, 250);">  
+                <p><%= (questions.length==0)?"You haven't added any questions yet!":"" %></p>
+                <ol class="list-decimal">
+                    <% for (let i=0; i<questions.length; i++) { %>
+                        <li style="background-color: antiquewhite;padding: 1rem;color: black;border-radius: 1rem;border: 5px solid green;">
+                            <div >
+                                <div >
+                                    <h3><a style="text-decoration: none;color: black;" href="/elections/<%= id %>/questions/<%= questions[i].id %>" ><%= questions[i].question_name %></a></h3>
+                                    <p ><%= questions[i].question_description %></p>
+                                </div>
+                                <div style="display: flex;width: 100%;justify-content: space-around;align-items: center;">
+                                    <div >                                                                      
+                                          
+                                        <a class="front pushable" style="text-decoration: none;" href="/elections/<%= id %>/questions/<%= questions[i].id %>/edit" >Edit question</a>
+                                    </div>
+                                    <div >                                                                        
+                                          
+                                        <a class="front pushable" style="text-decoration: none;"  href="/elections/<%= id %>/questions/<%= questions[i].id %>" >Edit  options</a>
+                                    </div>
+                                    
+                                    <div >                                     
+                                          <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"/></svg> -->
+                                        <a class="front pushable" style="text-decoration: none;"  onclick="deleteQuestions({electionID: <%= id %>, questionID: <%= questions[i].id %>})" >Delete question</a>
+                                    </div>
+                                    <!-- <% if ((questions.length) > 1) { %> -->
+                                    <!-- <% } %> -->
+                                </div>
+                            </div>
+                        </li>
+                    <% } %>
+                </ol>
+            </div>
+        </div>
+        <div>
+            <form action="/elections/<%= id %>/questions/create" method="post" class="px-8 py-6">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <u>
+                <label style="margin-bottom: 1rem;">Add Questions</label>
+                </u>
+                <div style="margin-bottom: 1rem;">
+
+                
+                <label for="questionName" >Question Title-</label>                
+                <input id="questionName" name="questionName" type="text" placeholder="Enter The Question"  required>
+            </div>
+            <div style="margin-bottom: 1rem;">
+
+            
+                <label for="description" >Description -</label>
+                <br>
+                <br>
+                <textarea id="description" name="description"  placeholder="Enter The Description" rows="4"></textarea>
+            </div>
+                <button class="front pushable" type="submit" id="round" >Add question</button>
+                
+            </form>
+        </div>
+    </div>
+</body>
+</html>
