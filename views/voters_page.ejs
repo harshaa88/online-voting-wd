@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <script>
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+        function deleteVoterHere({electionID, voterID}) {
+            fetch(`/elections/${electionID}/voters/${voterID}`, {
+                method: "delete",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({
+                    "_csrf":token
+                })
+            }).then((ress)=>{
+                if (ress.ok) {
+                    window.location.reload();
+                }
+            }).catch((err1)=> console.error(err1))
+        }
+    </script>
+    <title><%= title %></title>
+    <style>
+         @import url('https://fonts.googleapis.com/css2?family=Rowdies&display=swap'); 
+ @import url('https://fonts.googleapis.com/css2?family=PT+Sans&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');  
+
+body{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    background-color: black;
+    
+    font-family: 'PT Sans', sans-serif;
+}
+
+@keyframes bg-change {
+    0% { background-color: black; }
+    50% { background-color: grey; }
+    100% {  background-color: rgb(210, 207, 207);}
+}
+
+.header{
+    margin-top: 2rem;
+    border: 3px solid white;
+    padding: 1rem;
+    background-color: rgb(105, 158, 255);
+    border-radius: 10px;
+    width:95vw;
+    text-align: center;
+    font-family: 'Rowdies', cursive;
+    font-size: 2rem;
+    
+}
+
+@keyframes back-change {
+    0% { background-color: yellow; }
+    50% { background-color: antiquewhite; }
+    100% {  background-color: rgb(250, 166, 208);}
+    
+}
+
+
+  
+  @keyframes color-change {
+    0% { color: green; }
+    50% { color: blue;; }
+    100% { color: brown; }
+  }
+
+  input,textarea{
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 3px solid blue;
+  }
+
+.header a{
+    text-decoration: none;
+    color: rgb(49, 43, 226);
+    
+}
+.btn{
+    text-decoration: none;
+    color: white;
+    padding: 1rem;
+    border: 3px solid white;
+    border-radius: 9px;
+    font-family: 'PT Sans', sans-serif;
+    font-weight: bolder;
+}
+
+.mt{
+    margin-top: 4rem;
+}
+
+
+.pushable {
+    background: rgb(0, 76, 163);
+    border: none;
+    border-radius: 12px;
+    padding: 0;
+    cursor: pointer;
+  }
+  .front {
+    display: block;
+    padding: 12px 42px;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    background: rgb(0, 128, 240);
+    color: white;
+    transform: translateY(-4px);
+  }
+  
+  .pushable:focus:not(:focus-visible) {
+    outline: none;
+  }
+    </style>
+    <link rel="icon" type="image/x-icon" href="/img/vote.png">
+</head>
+<body >
+    <%- include('header.ejs') %>
+    <div style="display: flex;justify-content: space-around;width: 35%;">
+        
+        <a class="front pushable" href="/elections" >All Elections</a>
+        
+        <a class="front pushable" href="/elections/<%= id %>/" >Election</a>
+    </div>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <div >
+        <div >
+            <h2><%= title %> - Voters are : </h2>
+        </div>
+        <div >
+            <div >  
+           
+                <p ><%= (voters.length==0)?"You haven't added any voters yet!":"" %></p>
+                <ol class="list-decimal">
+                    <% for (let i=0; i<voters.length; i++) { %>
+                        <li>
+                            <div style="display: flex;align-items: center;justify-content: space-around;" >
+                                <p ><%= voters[i].voter_id %></p>
+                                                                    
+                                          
+                                        <a onclick="deleteVoterHere({electionID: <%= id %>, voterID: <%= voters[i].id %>})" class="text-sm hover:text-indigo-900">>Delete voter</a>
+                                  
+                            </div>
+                        </li>
+                    <% } %>
+                </ol>
+            </div>
+        </div>
+        <h2 class="font-semibold font-serif text-black">Add Voters</h2>
+        <form action="/elections/<%= electionID %>/voters/create" method="post" class="px-8 py-6 bg-yellow-200">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <label for="voterid" class="mt-5 font-semibold font-serif text-black">Voters- ID : </label>
+            
+            <input id="voterid" name="voterid" type="voterid" placeholder="Voter ID" class="six border w-full h-5 px-5 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md" required>
+            <br>
+            <label for="password" class="block mt-5 font-semibold font-serif text-black">Password : </label>
+            <input id="password" name="password" type="password" placeholder="Password" class="six border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md font-serif" required>
+            <button style="margin-top: 1rem;" type="submit" id="round" class="front pushable">Add voter</button>
+            
+        </form>
+    </div>
+</body>
+</html>
