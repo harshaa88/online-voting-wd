@@ -40,3 +40,4 @@ module.exports = {
     await queryInterface.dropTable('model_elections');
   }
 };
+
