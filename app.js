@@ -441,6 +441,7 @@ app.get("/elections/:electionID/questions/:questionID/edit",
           csrfToken: request5.csrfToken(),
         });
       } catch (error5) {
+        
         console.log(error5);
         return response5.status(422).json(error5);
       }
