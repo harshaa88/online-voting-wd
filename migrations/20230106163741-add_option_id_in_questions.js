@@ -35,3 +35,4 @@ module.exports = {
     await queryInterface.removeColumn("model_options", "question_id");
   }
 };
+
