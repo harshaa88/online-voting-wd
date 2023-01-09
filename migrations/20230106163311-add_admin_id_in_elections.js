@@ -32,3 +32,4 @@ module.exports = {
     await queryInterface.removeColumn("model_elections", "admin_id");
   }
 };
+
